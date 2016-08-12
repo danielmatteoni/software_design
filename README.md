@@ -1,1 +1,1 @@
-# software_design
+# Software design exercises
