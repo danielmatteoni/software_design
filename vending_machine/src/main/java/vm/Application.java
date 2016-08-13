@@ -11,7 +11,7 @@ import vm.init.TestDataPopulator;
 @SpringBootApplication
 public class Application {
 
-    @Autowired
+    @Autowired(required=false)
     private TestDataPopulator testDataPopulator;
 	
     public static void main(String[] args) {
@@ -20,6 +20,8 @@ public class Application {
 
     @PostConstruct
     public void afterConfig() {
-        testDataPopulator.init();
+        if (testDataPopulator != null) {
+        	testDataPopulator.init();
+        }
     }
 }

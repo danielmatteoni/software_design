@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Vending Machine</title>
+</head>
+<body>
+	<div>
+		<h2>Product purchased</h2>
+
+		<p th:text="'Please, pick up your ' + ${name}"></p>
+		
+		<div th:unless="${#lists.isEmpty(returnCoins)}">
+			<table>
+				<thead>
+					<tr>
+						<th>Returned coins:</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="coin : ${returnCoins}">
+						<td th:text="${coin}"></td>
+					</tr>
+				</tbody>
+			</table>		
+		</div>
+		
+		<a th:text="Home" th:href="@{/choose_product}"></a>
+	</div>
+</body>
+</html>

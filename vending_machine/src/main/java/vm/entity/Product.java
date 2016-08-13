@@ -22,9 +22,6 @@ public class Product {
 	private BigDecimal price;
 	
 	@Column(nullable = false)
-	private String code;
-	
-	@Column(nullable = false)
 	private int count;
 
 	public Long getId() {
@@ -49,14 +46,6 @@ public class Product {
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public int getCount() {

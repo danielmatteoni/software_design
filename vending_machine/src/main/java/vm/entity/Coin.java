@@ -15,11 +15,21 @@ public class Coin {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 	
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private BigDecimal value;
 	
 	@Column(nullable = false)
 	private int count;
+
+	public Coin() {
+		super();
+	}
+	
+	public Coin(BigDecimal value, int count) {
+		super();
+		this.value = value;
+		this.count = count;
+	}
 
 	public Long getId() {
 		return id;

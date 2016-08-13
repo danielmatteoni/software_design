@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Vending Machine</title>
+</head>
+<body>
+	<div>
+		<h2 th:text="'Error while returning money: ' + ${errorMessage}"></h2>
+
+		<p th:text="'Please, call vending machine service'"></p>
+		
+		<a th:text="Home" th:href="@{/choose_product}"></a>
+	</div>
+</body>
+</html>
