@@ -1,6 +1,6 @@
 Prerequisities:
 
-1.	Java 1.8 installed. JAVA_HOME environment variable must point to the directory, where Java 1.8 is installed.
+1.	JDK 1.8 installed (http://www.oracle.com/technetwork/java/javase/downloads/index.html). JAVA_HOME environment variable must point to the directory, where JDK 1.8 is installed.
 
 2.	Maven installed  (https://maven.apache.org/install.html). Maven installation must be added to PATH environment variable. Please confirm it by executing  mvn –v
 
