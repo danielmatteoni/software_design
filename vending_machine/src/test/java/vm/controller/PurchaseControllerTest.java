@@ -45,12 +45,54 @@ public class PurchaseControllerTest {
 		
 	@Test
 	public void shouldListProducts() throws Exception {
-		this.mvc.perform(get("/"))
-			.andExpect(status().isOk())
+		given(this.coinService.getCredit())
+			.willReturn(BigDecimal.ZERO);
+		
+		// Show product list and expect all products to be listed
+		this.mvc.perform(get("/")).andExpect(status().isOk())
 			.andExpect(content().string(containsString("Nabisco Mini Snack")))
 			.andExpect(content().string(containsString("Kellog&#39;s Fruity Snack")))
 			.andExpect(content().string(containsString("Veggie Snack")))
 			.andExpect(content().string(containsString("Gerber Graduates Puffs")));
+	}
+	
+	@Test
+	public void shouldPurchaseProductAndReturnCoins() throws Exception {
+		given(this.productService.findOne(1L))
+			.willReturn(new Product("Nabisco Mini Snack", new BigDecimal(11.65), 25));
+		given(this.coinService.getCredit())
+			.willReturn(new BigDecimal(12));
+		List<BigDecimal> coins = Lists.newArrayList();
+		coins.add(new BigDecimal(0.2));
+		coins.add(new BigDecimal(0.1));
+		coins.add(new BigDecimal(0.05));
+		given(this.coinService.purchaseProduct(1L))
+			.willReturn(coins);
+		
+		// Order product Nabisco Mini Snack for 11.65
+		this.mvc.perform(get("/product?productId=1")).andExpect(status().isOk())
+			.andExpect(content().string(containsString("Product purchased")))
+			.andExpect(content().string(containsString("Returned coins:")))
+			.andExpect(content().string(containsString("0.20")))
+			.andExpect(content().string(containsString("0.10")))
+			.andExpect(content().string(containsString("0.05")));
+	}
+	
+	@Test
+	public void shouldWithdrawCredit() throws Exception {
+		given(this.coinService.getCredit())
+			.willReturn(new BigDecimal(3));
+		List<BigDecimal> coins = Lists.newArrayList();
+		coins.add(new BigDecimal(2));
+		coins.add(new BigDecimal(1));
+		given(this.coinService.withdrawCredit())
+			.willReturn(coins);
+		
+		// Withdraw and expect coins returned
+		this.mvc.perform(get("/withdraw")).andExpect(status().isOk())
+			.andExpect(content().string(containsString("Returned coins:")))
+			.andExpect(content().string(containsString("2")))
+			.andExpect(content().string(containsString("1")));
 	}
 	
 	private Iterable<Product> prepareProducts() {
@@ -70,13 +112,13 @@ public class PurchaseControllerTest {
 
     	Product product3 = new Product();
     	product3.setName("Veggie Snack");
-    	product3.setPrice(new BigDecimal(13.29));
-    	product3.setCount(10);
+    	product3.setPrice(new BigDecimal(8));
+    	product3.setCount(1);
     	list.add(product3);
 
     	Product product4 = new Product();
     	product4.setName("Gerber Graduates Puffs");
-    	product4.setPrice(new BigDecimal(6.79));
+    	product4.setPrice(new BigDecimal(6.01));
     	product4.setCount(10);
     	list.add(product4);
     	

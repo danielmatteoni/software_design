@@ -24,6 +24,17 @@ public class Product {
 	@Column(nullable = false)
 	private int count;
 
+	public Product() {
+		super();
+	}
+	
+	public Product(String name, BigDecimal price, int count) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.count = count;
+	}
+
 	public Long getId() {
 		return id;
 	}

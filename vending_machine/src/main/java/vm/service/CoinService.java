@@ -14,5 +14,9 @@ public interface CoinService {
 	
 	void addCoin(BigDecimal value);
 	
-	List<BigDecimal> calculateReturnCoins(BigDecimal returnAmount) throws MoneyReturnException;
+	List<BigDecimal> purchaseProduct(Long productId) throws MoneyReturnException;
+	
+	List<BigDecimal> withdrawCredit() throws MoneyReturnException;
+	
+	BigDecimal getCredit();
 }

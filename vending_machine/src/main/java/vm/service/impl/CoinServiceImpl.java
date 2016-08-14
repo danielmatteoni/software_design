@@ -12,15 +12,22 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import vm.entity.Coin;
+import vm.entity.Product;
 import vm.exception.MoneyReturnException;
 import vm.repository.CoinRepository;
+import vm.repository.ProductRepository;
 import vm.service.CoinService;
 
 @Service
 public class CoinServiceImpl implements CoinService {
 
+	private BigDecimal credit = BigDecimal.ZERO;
+	
 	@Autowired
 	private CoinRepository coinRepository;
+
+	@Autowired
+	private ProductRepository productRepository;
 	
 	@Override
 	public Iterable<Coin> findAll() {
@@ -38,12 +45,29 @@ public class CoinServiceImpl implements CoinService {
 		Coin coin = findByValue(value);
 		Preconditions.checkNotNull(coin);
 		coin.setCount(coin.getCount() + 1);
+		credit = credit.add(value);
 	}
-		
+
 	@Override
 	@Transactional
-	public List<BigDecimal> calculateReturnCoins(BigDecimal returnAmount) throws MoneyReturnException {
-		List<Coin> coins = coinRepository.findCoinsForReturnOrderByValueDesc(returnAmount);
+	public List<BigDecimal> purchaseProduct(Long productId) throws MoneyReturnException {
+		Product product = productRepository.findOne(productId);
+		product.setCount(product.getCount() - 1);
+		List<BigDecimal> result = calculateReturnCoins(credit.subtract(product.getPrice()));
+		credit = BigDecimal.ZERO;
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public List<BigDecimal> withdrawCredit() throws MoneyReturnException {
+		List<BigDecimal> result = calculateReturnCoins(credit);
+		credit = BigDecimal.ZERO;
+		return result;
+	}
+	
+	private List<BigDecimal> calculateReturnCoins(BigDecimal returnAmount) throws MoneyReturnException {
+		List<Coin> coins = coinRepository.findCoinsForReturnSortByValueDesc(returnAmount);
 		List<BigDecimal> result = Lists.newArrayList();
 		BigDecimal remaining = returnAmount;
 		
@@ -65,6 +89,11 @@ public class CoinServiceImpl implements CoinService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public BigDecimal getCredit() {
+		return credit;
 	}
 
 }

@@ -34,13 +34,13 @@ public class TestDataPopulator {
 
     	Product product3 = new Product();
     	product3.setName("Veggie Snack");
-    	product3.setPrice(new BigDecimal(13.29));
-    	product3.setCount(10);
+    	product3.setPrice(new BigDecimal(8));
+    	product3.setCount(1);
     	productRepository.save(product3);
 
     	Product product4 = new Product();
     	product4.setName("Gerber Graduates Puffs");
-    	product4.setPrice(new BigDecimal(6.79));
+    	product4.setPrice(new BigDecimal(6.01));
     	product4.setCount(10);
     	productRepository.save(product4);    	
     	

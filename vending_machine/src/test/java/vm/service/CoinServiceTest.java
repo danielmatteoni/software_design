@@ -33,21 +33,56 @@ public class CoinServiceTest {
 	}
 	
 	@Test
-	public void shouldReturnOptimalCoins() throws MoneyReturnException {
-		List<BigDecimal> list = coinService.calculateReturnCoins(new BigDecimal(0.81));
+	public void shouldReturnOptimalCoinsAfterPurchase() throws MoneyReturnException {
+		// Given
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
 		
-		assertThat(list.size()).isEqualTo(4);
-		assertThat(list.get(0).doubleValue()).isEqualTo(0.5);
-		assertThat(list.get(1).doubleValue()).isEqualTo(0.2);
-		assertThat(list.get(2).doubleValue()).isEqualTo(0.1);
-		assertThat(list.get(3).doubleValue()).isEqualTo(0.01);
+		// When
+		List<BigDecimal> list = coinService.purchaseProduct(1L);
+		
+		// Then
+		assertThat(list.size()).isEqualTo(3);
+		assertThat(list.get(0).doubleValue()).isEqualTo(0.2);
+		assertThat(list.get(1).doubleValue()).isEqualTo(0.1);
+		assertThat(list.get(2).doubleValue()).isEqualTo(0.05);
+	}
+
+	public void shouldWithdrawWholeCredit() throws MoneyReturnException {
+		// Given
+		coinService.addCoin(new BigDecimal(2));
+		
+		// When
+		List<BigDecimal> list = coinService.withdrawCredit();
+		
+		// Then
+		assertThat(list.size()).isEqualTo(1);
+		assertThat(list.get(0).doubleValue()).isEqualTo(2);
+	}
+		
+	@Test(expected=MoneyReturnException.class)
+	public void shouldThrowMoneyReturnExceptionIfNoCoinsAvailable() throws MoneyReturnException {
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.purchaseProduct(4L);
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.purchaseProduct(4L);
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.addCoin(new BigDecimal(2));
+		coinService.purchaseProduct(4L);		
 	}
 	
-	@Test(expected=MoneyReturnException.class)
-	public void shouldThrowMoneyReturnException() throws MoneyReturnException {
-		coinService.calculateReturnCoins(new BigDecimal(0.99));
-		coinService.calculateReturnCoins(new BigDecimal(0.99));
-	}
 }
 
 

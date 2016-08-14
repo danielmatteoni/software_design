@@ -35,11 +35,9 @@ public class PurchaseController {
 	@Autowired
 	private CoinService coinService;
 
-	private BigDecimal credit = BigDecimal.ZERO;
-
 	@RequestMapping({ "/", "/choose_product" })
 	public String chooseProduct(Model model) {
-		model.addAttribute("credit", credit);
+		model.addAttribute("credit", coinService.getCredit());
 		return "choose_product";
 	}
 
@@ -47,41 +45,32 @@ public class PurchaseController {
 	public String withdrawCredit(Model model) {
 		List<BigDecimal> returnCoins;
 		try {
-			returnCoins = coinService.calculateReturnCoins(credit);
+			returnCoins = coinService.withdrawCredit();
 		} catch (MoneyReturnException e) {
 			model.addAttribute("errorMessage", e.getMessage());
 			logger.error("Error while returning money", e);
 			return "return_error";
 		}
-		credit = BigDecimal.ZERO;
-		model.addAttribute("credit", credit);
+		model.addAttribute("credit", coinService.getCredit());
 		model.addAttribute("returnCoins", returnCoins);
 		return "withdraw";
 	}
 	
 	@RequestMapping({ "/product" })
-	public String showProduct(Model model, @RequestParam(value = "productId", required = true) String productId,
+	public String showProduct(Model model, @RequestParam(value = "productId", required = true) String id,
 			@RequestParam(value = "value", required = false) String value) {
-		Preconditions.checkArgument(NumberUtils.isNumber(productId));
-		Product product = productService.findOne(new Long(productId));
+		Preconditions.checkArgument(NumberUtils.isNumber(id));
+		Long productId = new Long(id);
+		Product product = productService.findOne(productId);
 		
 		if (value != null) {
 			Preconditions.checkArgument(NumberUtils.isNumber(value));
-			credit = credit.add(new BigDecimal(value));
 			coinService.addCoin(new BigDecimal(value));
 		}		
 		
 		try {
-			if (credit.compareTo(product.getPrice()) >= 0) {
-				BigDecimal returnAmount = credit.subtract(product.getPrice());
-				List<BigDecimal> returnCoins;
-
-				if (returnAmount.compareTo(BigDecimal.ZERO) > 0) {
-					returnCoins = coinService.calculateReturnCoins(credit.subtract(product.getPrice()));
-				} else {
-					returnCoins = Lists.newArrayList();
-				}
-				credit = BigDecimal.ZERO;
+			if (coinService.getCredit().compareTo(product.getPrice()) >= 0) {
+				List<BigDecimal> returnCoins = coinService.purchaseProduct(productId);
 				populateProductAndCreditModel(model, product);
 				model.addAttribute("returnCoins", returnCoins);
 				return "purchase";
@@ -100,7 +89,7 @@ public class PurchaseController {
 		model.addAttribute("productId", product.getId());
 		model.addAttribute("name", product.getName());
 		model.addAttribute("price", product.getPrice());
-		model.addAttribute("credit", credit);
+		model.addAttribute("credit", coinService.getCredit());
 	}
 
 	@ModelAttribute("allProducts")
