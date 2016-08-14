@@ -13,7 +13,7 @@
 			<table>
 				<tbody>
 					<tr>
-						<td th:text="'Your credit: ' + ${credit}"></td>
+						<td th:text="'Your credit: ' + ${credit} + ' ' + ${currency}"></td>
 						<td><a th:if="${credit} &gt; 0"	th:href="@{/withdraw}">Withdraw</a></td>
 					</tr>
 				</tbody>
@@ -26,7 +26,7 @@
 					<tr th:each="product : ${allProducts}">
 						<td><a th:text="${product.name}"
 							th:href="@{/product(productId=${product.id})}"></a></td>
-						<td th:text="${product.price}"></td>
+						<td th:text="${product.price} + ' ' + ${currency}"></td>
 					</tr>
 				</tbody>
 			</table>

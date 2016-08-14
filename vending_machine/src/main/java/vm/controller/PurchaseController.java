@@ -9,6 +9,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +30,9 @@ public class PurchaseController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	@Value("${currency}")
+	private String currency;
+	
 	@Autowired
 	private ProductService productService;
 
@@ -89,7 +93,7 @@ public class PurchaseController {
 		model.addAttribute("productId", product.getId());
 		model.addAttribute("name", product.getName());
 		model.addAttribute("price", product.getPrice());
-		model.addAttribute("credit", coinService.getCredit());
+		model.addAttribute("credit", coinService.getCredit());	
 	}
 
 	@ModelAttribute("allProducts")
@@ -101,6 +105,11 @@ public class PurchaseController {
 	@ModelAttribute("allCoins")
 	public List<Coin> populateCoinTypes() {
 		return Lists.newArrayList(coinService.findAll());
+	}
+	
+	@ModelAttribute("currency")
+	public String getCurrency() {
+		return currency;
 	}
 	
 }

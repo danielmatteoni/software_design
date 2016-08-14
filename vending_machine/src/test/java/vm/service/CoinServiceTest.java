@@ -52,6 +52,7 @@ public class CoinServiceTest {
 		assertThat(list.get(2).doubleValue()).isEqualTo(0.05);
 	}
 
+	@Test
 	public void shouldWithdrawWholeCredit() throws MoneyReturnException {
 		// Given
 		coinService.addCoin(new BigDecimal(2));
@@ -60,7 +61,6 @@ public class CoinServiceTest {
 		List<BigDecimal> list = coinService.withdrawCredit();
 		
 		// Then
-		assertThat(list.size()).isEqualTo(1);
 		assertThat(list.get(0).doubleValue()).isEqualTo(2);
 	}
 		

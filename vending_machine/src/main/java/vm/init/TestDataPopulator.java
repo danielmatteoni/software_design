@@ -18,7 +18,7 @@ public class TestDataPopulator {
     
     @Autowired
     private CoinRepository coinRepository;
-
+    
     public void init() {
     	Product product1 = new Product();
     	product1.setName("Nabisco Mini Snack");

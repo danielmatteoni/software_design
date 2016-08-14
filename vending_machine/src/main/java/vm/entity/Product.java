@@ -23,7 +23,7 @@ public class Product {
 	
 	@Column(nullable = false)
 	private int count;
-
+	
 	public Product() {
 		super();
 	}

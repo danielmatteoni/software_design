@@ -20,7 +20,7 @@ public class Coin {
 	
 	@Column(nullable = false)
 	private int count;
-
+	
 	public Coin() {
 		super();
 	}

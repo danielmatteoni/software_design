@@ -19,7 +19,7 @@
 				</thead>
 				<tbody>
 					<tr th:each="coin : ${returnCoins}">
-						<td th:text="${coin}"></td>
+						<td th:text="${coin} + ' ' + ${currency}"></td>
 					</tr>
 				</tbody>
 			</table>		

@@ -8,14 +8,14 @@
 	<div>
 		<h2 th:text="${name}"></h2>
 
-		<p th:text="'Please, insert ' + ${price}"></p>
+		<p th:text="'Please, insert ' + ${price} + ' ' + ${currency}"></p>
 		
-		<p th:text="'Your credit: ' + ${credit}"></p>
+		<p th:text="'Your credit: ' + ${credit} + ' ' + ${currency}"></p>
 		
 		<table>
 			<tbody>
 				<tr th:each="coin : ${allCoins}">
-					<td><a th:text="'Insert ' + ${coin.value}" th:href="@{/product(productId=${productId},value=${coin.value})}"></a></td>
+					<td><a th:text="'Insert ' + ${coin.value} + ' ' + ${currency}" th:href="@{/product(productId=${productId},value=${coin.value})}"></a></td>
 				</tr>
 			</tbody>
 		</table>	
